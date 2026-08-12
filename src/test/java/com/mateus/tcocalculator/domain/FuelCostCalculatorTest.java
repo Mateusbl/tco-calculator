@@ -10,18 +10,18 @@ class FuelCostCalculatorTest {
     @Test
     @DisplayName("Deve calcular o custo anual de combustível corretamente")
     void deveCalcularCustoAnualDeCombustivel(){
-        BigDecimal kmRodadosAno = BigDecimal.valueOf(12000);
-        BigDecimal consumoKmporLitro = BigDecimal.valueOf(12);
-        BigDecimal precoPorLitro = BigDecimal.valueOf(5.80);
+        BigDecimal kmPerYear = BigDecimal.valueOf(12000);
+        BigDecimal consumptionKmPerLiter = BigDecimal.valueOf(12);
+        BigDecimal pricePerLiter = BigDecimal.valueOf(5.80);
         FuelCostCalculator calculator = new FuelCostCalculator();
 
-        BigDecimal custoAnual = calculator.calcular(
-            kmRodadosAno,
-            consumoKmporLitro,
-            precoPorLitro
+        BigDecimal annualCost = calculator.calculate(
+            kmPerYear,
+            consumptionKmPerLiter,
+            pricePerLiter
         );
 
-        assertThat(custoAnual).isEqualByComparingTo(BigDecimal.valueOf(5800.00));
+        assertThat(annualCost).isEqualByComparingTo(BigDecimal.valueOf(5800.00));
     }
 
     @Test
@@ -32,7 +32,7 @@ class FuelCostCalculatorTest {
         BigDecimal precoPorLitro = BigDecimal.valueOf(5.80);
         FuelCostCalculator calculator = new FuelCostCalculator();
 
-        BigDecimal custoAnual = calculator.calcular(
+        BigDecimal custoAnual = calculator.calculate(
             kmRodadosAno,
             consumoKmporLitro,
             precoPorLitro
