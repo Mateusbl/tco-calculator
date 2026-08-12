@@ -1,11 +1,43 @@
 package com.mateus.tcocalculator.adapter.out.fipe;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
-public class FipeAdapter {
-    public BigDecimal parsePrice(String rawPrice){
+import org.springframework.web.client.RestClient;
+
+import com.mateus.tcocalculator.domain.port.out.VehiclePricePort;
+
+public class FipeAdapter implements VehiclePricePort {
+
+    private final RestClient restClient;
+    public FipeAdapter(RestClient restClient){
+        this.restClient = restClient;
+    }
+
+    public BigDecimal parsePrice(String rawPrice) {
         String clean = rawPrice.replace("R$ ", "").replace(".", "").replace(",", ".");
         return new BigDecimal(clean);
+    }
+
+    @Override
+    public List<BigDecimal> findPriceHistory(String brandCode, String modelCode, List<String> yearCodes) {
+        List<BigDecimal> prices = new ArrayList<>();
+
+        for (String yearCode : yearCodes) {
+            FipeVehicleResponse response = restClient.get()
+                    .uri("/cars/brands/{brandCode}/models/{modelCode}/years/{yearCode}", brandCode, modelCode, yearCode)
+                    .retrieve()
+                    .body(FipeVehicleResponse.class);
+
+            String rawPrice = response.price();
+
+            BigDecimal price = parsePrice(rawPrice);
+
+            prices.add(price);
+        }
+
+        return prices;
     }
 
 }
