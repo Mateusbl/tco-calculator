@@ -7,6 +7,8 @@ import java.util.List;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.client.RestClient;
 
+import com.mateus.tcocalculator.domain.FuelType;
+import com.mateus.tcocalculator.domain.VehicleDetails;
 import com.mateus.tcocalculator.domain.port.out.VehiclePricePort;
 
 public class FipeAdapter implements VehiclePricePort {
@@ -56,6 +58,28 @@ public class FipeAdapter implements VehiclePricePort {
 
         return yearCodes;
 
+    }
+
+    @Override
+    public VehicleDetails findVehicleDetails(Integer brandCode, Integer modelCode, String yearCode){
+        FipeVehicleResponse response = restClient.get().uri("/cars/brands/{brandCode}/models/{modelCode}/years/{yearCode}",brandCode, modelCode, yearCode)
+        .retrieve()
+        .body(FipeVehicleResponse.class);
+
+        FuelType fuelType = mapFuelType(response.fuel());
+
+        return new VehicleDetails(response.brand(), response.model(),response.modelYear(),response.codeFipe(),fuelType);
+
+    }
+
+    private FuelType mapFuelType(String fuel) {
+        return switch (fuel) {
+            case "Gasolina" -> FuelType.GASOLINE;
+            case "Álcool", "Etanol" -> FuelType.ETHANOL;
+            case "Diesel" -> FuelType.DIESEL;
+            case "Flex" -> FuelType.FLEX;
+            default -> throw new IllegalArgumentException("Tipo de combustivel desconhecido: " + fuel);
+        };
     }
 
 }

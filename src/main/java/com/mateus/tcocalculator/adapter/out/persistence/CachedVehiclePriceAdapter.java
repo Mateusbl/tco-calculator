@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.mateus.tcocalculator.adapter.out.fipe.FipeAdapter;
+import com.mateus.tcocalculator.domain.VehicleDetails;
 import com.mateus.tcocalculator.domain.port.out.VehiclePricePort;
 
 public class CachedVehiclePriceAdapter implements VehiclePricePort {
@@ -56,6 +57,11 @@ public class CachedVehiclePriceAdapter implements VehiclePricePort {
         entity.setPrice(price);
         entity.setFetchedAt(LocalDate.now());
         repository.save(entity);
+    }
+
+    @Override
+    public VehicleDetails findVehicleDetails(Integer brandCode, Integer modelCode, String yearCode){
+        return fipeAdapter.findVehicleDetails(brandCode, modelCode, yearCode);
     }
 
 
