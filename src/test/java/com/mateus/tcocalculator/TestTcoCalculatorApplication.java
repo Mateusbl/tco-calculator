@@ -1,4 +1,4 @@
-package com.mateus.tco_calculator;
+package com.mateus.tcocalculator;
 
 import org.springframework.boot.SpringApplication;
 

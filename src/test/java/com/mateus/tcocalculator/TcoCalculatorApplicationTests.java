@@ -1,4 +1,4 @@
-package com.mateus.tco_calculator;
+package com.mateus.tcocalculator;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

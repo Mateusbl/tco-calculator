@@ -48,8 +48,9 @@ for (int i = 0; i < priceHistory.size(); i++) {
 
 BigDecimal projectedDepreciation = depreciationCalculator.calculate(months, priceHistory, priceHistory.size());
 BigDecimal annualFuelCost = fuelCostCalculator.calculate(kmPerYear, vehicle.inmetroConsumption(), pricePerLiter);
-BigDecimal ipvaCost = ipvaRatePort.findRate(vehicle, vehicle.state());
-BigDecimal licensingCost = licensingFeePort.findFee(vehicle.state());
+BigDecimal vehicleValue = priceHistory.get(0);
+BigDecimal ipvaRate = ipvaRatePort.findRate(vehicle, vehicle.state());
+BigDecimal ipvaCost = vehicleValue.multiply(ipvaRate);BigDecimal licensingCost = licensingFeePort.findFee(vehicle.state());
 
     
 

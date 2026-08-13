@@ -46,7 +46,7 @@ public class CalculateTcoServiceTest {
         CalculateTcoService service = new CalculateTcoService(fuelCostCalculator, depreciationCalculator, vehiclePricePort, ipvaRatePort, licensingFeePort);
         TcoResult result = service.calculate(vehicle, BigDecimal.valueOf(12000), BigDecimal.valueOf(5.80));
 
-        assertThat(result.total()).isEqualByComparingTo(BigDecimal.valueOf(150174.12));
+        assertThat(result.total()).isEqualByComparingTo(BigDecimal.valueOf(153374.08));
     }
 
 }
