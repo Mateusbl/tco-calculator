@@ -30,4 +30,25 @@ public class FipeAdapterIntegrationTest {
         mockServer.verify();
     }
 
+
+    @Test
+    @DisplayName("shoudl fetch the available model years")
+    void shouldFetchAvailableYears(){
+        RestClient.Builder builder = RestClient.builder().baseUrl("https://fipe.parallelum.com.br/api/v2");
+        MockRestServiceServer mockServer = MockRestServiceServer.bindTo(builder).build();
+
+        mockServer.expect(requestTo("https://fipe.parallelum.com.br/api/v2/cars/brands/59/models/5940/years"))
+        .andRespond(withSuccess(
+            "[{\"code\":\"2022-3\",\"name\":\"2022 Diesel\"},{\"code\":\"2021-3\",\"name\":\"2021 Diesel\"}]",
+            MediaType.APPLICATION_JSON));
+
+        RestClient restClient = builder.build();
+        FipeAdapter adapter = new FipeAdapter(restClient);
+
+        List<String> years = adapter.findAvailableYears(59, 5940);
+
+    assertThat(years).containsExactly("2022-3", "2021-3");
+    mockServer.verify();
+    }
+
 }
