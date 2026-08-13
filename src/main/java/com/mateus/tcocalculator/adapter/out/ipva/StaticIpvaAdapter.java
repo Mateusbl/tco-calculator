@@ -4,40 +4,40 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Map;
 
+import com.mateus.tcocalculator.domain.BrazilianState;
 import com.mateus.tcocalculator.domain.FuelType;
 import com.mateus.tcocalculator.domain.Vehicle;
 import com.mateus.tcocalculator.domain.port.out.IpvaRatePort;
 
 public class StaticIpvaAdapter implements IpvaRatePort {
 
-    private static final Map<String, BigDecimal> RATES_BY_STATE = Map.ofEntries(
-        Map.entry("MG", BigDecimal.valueOf(0.04)),
-        Map.entry("RJ", BigDecimal.valueOf(0.04)),
-        Map.entry("SP", BigDecimal.valueOf(0.04)),
-        Map.entry("GO", BigDecimal.valueOf(0.0375)),
-        Map.entry("AL", BigDecimal.valueOf(0.03)),
-        Map.entry("CE", BigDecimal.valueOf(0.03)),
-        Map.entry("DF", BigDecimal.valueOf(0.03)),
-        Map.entry("MT", BigDecimal.valueOf(0.03)),
-        Map.entry("MS", BigDecimal.valueOf(0.03)),
-        Map.entry("RN", BigDecimal.valueOf(0.03)),
-        Map.entry("RS", BigDecimal.valueOf(0.03)),
-        Map.entry("RO", BigDecimal.valueOf(0.03)),
-        Map.entry("RR", BigDecimal.valueOf(0.03)),
-        Map.entry("BA", BigDecimal.valueOf(0.025)),
-        Map.entry("MA", BigDecimal.valueOf(0.025)),
-        Map.entry("PA", BigDecimal.valueOf(0.025)),
-        Map.entry("PB", BigDecimal.valueOf(0.025)),
-        Map.entry("PE", BigDecimal.valueOf(0.024)),
-        Map.entry("AC", BigDecimal.valueOf(0.02)),
-        Map.entry("AM", BigDecimal.valueOf(0.02)),
-        Map.entry("ES", BigDecimal.valueOf(0.02)),
-        Map.entry("SC", BigDecimal.valueOf(0.02)),
-        Map.entry("PR", BigDecimal.valueOf(0.019))
+    private static final Map<BrazilianState, BigDecimal> RATES_BY_STATE = Map.ofEntries(
+        Map.entry(BrazilianState.MG, BigDecimal.valueOf(0.04)),
+        Map.entry(BrazilianState.RJ, BigDecimal.valueOf(0.04)),
+        Map.entry(BrazilianState.SP, BigDecimal.valueOf(0.04)),
+        Map.entry(BrazilianState.GO, BigDecimal.valueOf(0.0375)),
+        Map.entry(BrazilianState.AL, BigDecimal.valueOf(0.03)),
+        Map.entry(BrazilianState.CE, BigDecimal.valueOf(0.03)),
+        Map.entry(BrazilianState.DF, BigDecimal.valueOf(0.03)),
+        Map.entry(BrazilianState.MT, BigDecimal.valueOf(0.03)),
+        Map.entry(BrazilianState.MS, BigDecimal.valueOf(0.03)),
+        Map.entry(BrazilianState.RN, BigDecimal.valueOf(0.03)),
+        Map.entry(BrazilianState.RS, BigDecimal.valueOf(0.03)),
+        Map.entry(BrazilianState.RO, BigDecimal.valueOf(0.03)),
+        Map.entry(BrazilianState.RR, BigDecimal.valueOf(0.03)),
+        Map.entry(BrazilianState.BA, BigDecimal.valueOf(0.025)),
+        Map.entry(BrazilianState.MA, BigDecimal.valueOf(0.025)),
+        Map.entry(BrazilianState.PA, BigDecimal.valueOf(0.025)),
+        Map.entry(BrazilianState.PB, BigDecimal.valueOf(0.025)),
+        Map.entry(BrazilianState.PE, BigDecimal.valueOf(0.024)),
+        Map.entry(BrazilianState.AC, BigDecimal.valueOf(0.02)),
+        Map.entry(BrazilianState.AM, BigDecimal.valueOf(0.02)),
+        Map.entry(BrazilianState.ES, BigDecimal.valueOf(0.02)),
+        Map.entry(BrazilianState.SC, BigDecimal.valueOf(0.02)),
+        Map.entry(BrazilianState.PR, BigDecimal.valueOf(0.019))
     );
 
-
-    private BigDecimal findBaseRate(String state){
+    private BigDecimal findBaseRate(BrazilianState state){
         BigDecimal rate = RATES_BY_STATE.get(state);
         if (rate==null){
             throw new IllegalArgumentException("Estado nao suprtado: " +state);
@@ -62,7 +62,7 @@ private BigDecimal applyFuelTypeAdjustment(BigDecimal baseRate, FuelType fuelTyp
     
     @Override
 
-    public BigDecimal findRate(Vehicle vehicle, String state){
+    public BigDecimal findRate(Vehicle vehicle, BrazilianState state ){
      
         BigDecimal baserate = findBaseRate(state);
         return applyFuelTypeAdjustment(baserate, vehicle.fuelType());

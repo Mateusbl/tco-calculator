@@ -24,7 +24,7 @@ public class FipeAdapterIntegrationTest {
         RestClient restClient = builder.build();
         FipeAdapter adapter = new FipeAdapter(restClient);
 
-        List<BigDecimal> prices = adapter.findPriceHistory("59", "5940", List.of("2022-3"));
+        List<BigDecimal> prices = adapter.findPriceHistory(59, 5940, List.of("2022-3"));
 
         assertThat(prices).usingComparatorForType(BigDecimal::compareTo,BigDecimal.class).containsExactly(BigDecimal.valueOf(149800.00));
         mockServer.verify();

@@ -8,13 +8,15 @@ import java.math.BigDecimal;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.mateus.tcocalculator.domain.BrazilianState;
+
 public class StaticLicensingAdapterTest {
 
     @Test
     @DisplayName("teste se os estados estao com as fees certas")
     void calculatelicensingfee(){
     StaticLicensingAdapter adapter = new StaticLicensingAdapter();
-    BigDecimal fee = adapter.findFee("MG");
+    BigDecimal fee = adapter.findFee(BrazilianState.MG);
     assertThat(fee).isEqualByComparingTo(BigDecimal.valueOf(35.62));
     }
 
@@ -25,7 +27,7 @@ public class StaticLicensingAdapterTest {
     void calculatlicensingfeeexception(){
         StaticLicensingAdapter adapter = new StaticLicensingAdapter();
 
-        assertThatThrownBy(() -> adapter.findFee("XX"))
+        assertThatThrownBy(() -> adapter.findFee(BrazilianState.RR))
         .isInstanceOf(IllegalArgumentException.class);
     }
 }

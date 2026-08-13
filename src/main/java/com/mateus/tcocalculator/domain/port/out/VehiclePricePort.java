@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface VehiclePricePort {
-    List<BigDecimal> findPriceHistory(String brandCode, String modelCode, List<String> yearCodes);
+    List<BigDecimal> findPriceHistory(Integer brandCode, Integer modelCode, List<String> yearCodes);
+    List<String> findAvailableYears(Integer brandCode, Integer modelCode);
+    
 
 }

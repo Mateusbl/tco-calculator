@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.client.RestClient;
 
 import com.mateus.tcocalculator.domain.port.out.VehiclePricePort;
@@ -21,7 +22,7 @@ public class FipeAdapter implements VehiclePricePort {
     }
 
     @Override
-    public List<BigDecimal> findPriceHistory(String brandCode, String modelCode, List<String> yearCodes) {
+    public List<BigDecimal> findPriceHistory(Integer brandCode, Integer modelCode, List<String> yearCodes) {
         List<BigDecimal> prices = new ArrayList<>();
 
         for (String yearCode : yearCodes) {
@@ -38,6 +39,23 @@ public class FipeAdapter implements VehiclePricePort {
         }
 
         return prices;
+    }
+
+
+    @Override
+    public List<String> findAvailableYears(Integer brandCode, Integer modelCode){
+        List<FipeYearResponse> yearResponses = restClient.get().uri("/cars/brands/{brandCode}/models/{modelCode}/years",brandCode,modelCode)
+        .retrieve()
+        .body(new ParameterizedTypeReference<List<FipeYearResponse>>() {});
+
+
+        List<String> yearCodes = new ArrayList<>();
+        for (FipeYearResponse yearResponse : yearResponses ){
+            yearCodes.add(yearResponse.code());
+        }
+
+        return yearCodes;
+
     }
 
 }
