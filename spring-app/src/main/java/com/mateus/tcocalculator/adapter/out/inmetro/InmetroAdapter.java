@@ -39,14 +39,18 @@ public class InmetroAdapter {
         return new BigDecimal(cidade.replace(",", "."));
     }
 
-    public BigDecimal findConsumption(String text, String make, String model){
+    public BigDecimal findConsumption(String text, String make, String model) {
         String[] lines = text.split("\n");
-        for (String line : lines ){
-            if (line.contains(make) && line.contains(model)){
-            return parseConsumptionFromLine(line);
+        String makeKeyword = make.split(" ")[0];
+        String modelKeyword = model.split(" ")[0];
+    
+        for (String line : lines) {
+            if (line.contains(makeKeyword) && line.contains(modelKeyword)) {
+                return parseConsumptionFromLine(line);
             }
         }
-    throw new IllegalArgumentException("Veiculo nao encontrado: "+make+""+model);
+    
+        throw new IllegalArgumentException("Veiculo nao encontrado: " + make + " " + model);
     }
 
     private static final String LISTING_PAGE_URL = "https://www.gov.br/inmetro/pt-br/assuntos/regulamentacao/avaliacao-da-conformidade/programa-brasileiro-de-etiquetagem/tabelas-de-eficiencia-energetica/veiculos-automotivos-pbe-veicular";
