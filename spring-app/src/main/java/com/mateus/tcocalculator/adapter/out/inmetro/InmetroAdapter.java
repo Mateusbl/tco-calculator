@@ -33,4 +33,15 @@ public class InmetroAdapter {
         String cidade = tokens[tokens.length - 9];
         return new BigDecimal(cidade.replace(",", "."));
     }
+
+    public BigDecimal findconsumption(String text, String make, String model){
+        String[] lines = text.split("\n");
+        for (String line : lines ){
+            if (line.contains(make) && line.contains(model)){
+            return parseConsumptionFromLine(line);
+            }
+        }
+    throw new IllegalArgumentException("Veiculo nao encontrado: "+make+""+model);
+    } 
+
 }

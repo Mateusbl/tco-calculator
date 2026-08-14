@@ -48,4 +48,18 @@ void shouldParseConsumptionFromKnownLine() {
     assertThat(result).isEqualByComparingTo(BigDecimal.valueOf(12.0));
 }
 
+
+@Test
+@DisplayName("test for real consumptiom from pdf ")
+void shouldFindConsumptionForRealVehicle() throws IOException{
+    RestClient restClient = RestClient.create();
+    InmetroAdapter adapter = new InmetroAdapter(restClient);
+    byte[] pdfBytes = adapter.downloadPDF();
+    String text = adapter.extractText(pdfBytes);
+
+    BigDecimal result = adapter.findconsumption(text, "Mercedes-Benz", "CLA200");
+
+    assertThat(result).isEqualByComparingTo(BigDecimal.valueOf(12.0));
+}
+
 }
