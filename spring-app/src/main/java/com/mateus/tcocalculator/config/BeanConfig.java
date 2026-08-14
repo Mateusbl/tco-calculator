@@ -26,6 +26,10 @@ import com.mateus.tcocalculator.domain.port.out.VehiclePricePort;
 @Configuration
 public class BeanConfig {
 
+  
+
+
+
     @Bean
     public RestClient fipeRestClient() {
         return RestClient.create("https://fipe.parallelum.com.br/api/v2");
@@ -67,8 +71,8 @@ public class BeanConfig {
     }
 
     @Bean
-    public BuildVehicleUseCase buildVehicleUseCase(VehiclePricePort vehiclePricePort, VehicleFactory vehicleFactory) {
-        return new BuildVehicleService(vehiclePricePort, vehicleFactory);
+    public BuildVehicleUseCase buildVehicleUseCase(VehiclePricePort vehiclePricePort,FuelConsumptionPort fuelConsumptionPort , VehicleFactory vehicleFactory) {
+        return new BuildVehicleService(vehiclePricePort, fuelConsumptionPort ,vehicleFactory);
     }
 
     @Bean
@@ -77,9 +81,10 @@ public class BeanConfig {
         DepreciationCalculator depreciationCalculator,
         VehiclePricePort vehiclePricePort,
         IpvaRatePort ipvaRatePort,
-        LicensingFeePort licensingFeePort
+        LicensingFeePort licensingFeePort,
+        FuelConsumptionPort fuelConsumptionPort
     ) {
-        return new CalculateTcoService(fuelCostCalculator, depreciationCalculator, vehiclePricePort, ipvaRatePort, licensingFeePort);
+        return new CalculateTcoService(fuelCostCalculator, depreciationCalculator, vehiclePricePort, ipvaRatePort, licensingFeePort , fuelConsumptionPort);
     }
 
     @Bean

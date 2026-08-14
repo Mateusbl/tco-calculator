@@ -18,21 +18,23 @@ import com.mateus.tcocalculator.domain.FuelCostCalculator;
 import com.mateus.tcocalculator.domain.FuelType;
 import com.mateus.tcocalculator.domain.TcoResult;
 import com.mateus.tcocalculator.domain.Vehicle;
+import com.mateus.tcocalculator.domain.port.out.FuelConsumptionPort;
 import com.mateus.tcocalculator.domain.port.out.IpvaRatePort;
 import com.mateus.tcocalculator.domain.port.out.LicensingFeePort;
 import com.mateus.tcocalculator.domain.port.out.VehiclePricePort;
 
 public class CalculateTcoServiceTest {
     @Test
-    @DisplayName("Calculado de tco completo com todso os custos ")
+    @DisplayName("calcaulate full tco ")
     void shouldCalculateFullTco(){
         FuelCostCalculator fuelCostCalculator = mock(FuelCostCalculator.class);
         DepreciationCalculator depreciationCalculator = mock(DepreciationCalculator.class);
         VehiclePricePort vehiclePricePort = mock(VehiclePricePort.class);
         IpvaRatePort ipvaRatePort = mock(IpvaRatePort.class);
         LicensingFeePort licensingFeePort = mock(LicensingFeePort.class);
+        FuelConsumptionPort fuelConsumptionPort = mock(FuelConsumptionPort.class);
         
-        Vehicle vehicle = new Vehicle("Toyota","Etios",2023,BigDecimal.valueOf(12.5),"001004-9",FuelType.GASOLINE,59,5940,BrazilianState.SP);
+        Vehicle vehicle = new Vehicle("Toyota","Etios",2023,"001004-9",FuelType.GASOLINE,59,5940,BrazilianState.SP);
         
         when(vehiclePricePort.findAvailableYears(59,5940)).thenReturn(List.of("2022-3", "2021-3", "2020-3"));
 
@@ -42,8 +44,9 @@ public class CalculateTcoServiceTest {
         when(fuelCostCalculator.calculate(any(), any(), any())).thenReturn(BigDecimal.valueOf(75000));
         when(ipvaRatePort.findRate(vehicle, BrazilianState.SP)).thenReturn(BigDecimal.valueOf(0.04));
         when(licensingFeePort.findFee(BrazilianState.SP)).thenReturn(BigDecimal.valueOf(174.08));
+        when(fuelConsumptionPort.findConsumption("Toyota","Etios" )).thenReturn(BigDecimal.valueOf(12.5));
 
-        CalculateTcoService service = new CalculateTcoService(fuelCostCalculator, depreciationCalculator, vehiclePricePort, ipvaRatePort, licensingFeePort);
+        CalculateTcoService service = new CalculateTcoService(fuelCostCalculator, depreciationCalculator, vehiclePricePort, ipvaRatePort, licensingFeePort,fuelConsumptionPort);
         TcoResult result = service.calculate(vehicle, BigDecimal.valueOf(12000), BigDecimal.valueOf(5.80));
 
         assertThat(result.total()).isEqualByComparingTo(BigDecimal.valueOf(153374.08));

@@ -6,6 +6,6 @@ import com.mateus.tcocalculator.domain.BrazilianState;
 import com.mateus.tcocalculator.domain.Vehicle;
 
 public interface BuildVehicleUseCase {
-    Vehicle build(Integer brandCode, Integer modelCode, String yearCode, BrazilianState state, BigDecimal inmetroConsumption);
+    Vehicle build(Integer brandCode, Integer modelCode, String yearCode, BrazilianState state);
 
 }

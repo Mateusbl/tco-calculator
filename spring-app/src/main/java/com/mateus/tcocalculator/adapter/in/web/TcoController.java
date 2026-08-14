@@ -24,7 +24,7 @@ public class TcoController {
 
     @PostMapping("/tco/calcular")
     public TcoResponse calculate(@RequestBody CalculateTcoRequest request) {
-        Vehicle vehicle = buildVehicleUseCase.build(request.brandCode(), request.modelCode(), request.yearCode(), request.state(), request.inmetroConsumption());
+        Vehicle vehicle = buildVehicleUseCase.build(request.brandCode(), request.modelCode(), request.yearCode(), request.state());
 
         TcoResult result = calculateTcoUseCase.calculate(vehicle, request.kmPerYear(),request.pricePerLiter());
 

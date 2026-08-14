@@ -9,7 +9,6 @@ public record CalculateTcoRequest(
     Integer modelCode,
     String yearCode,
     BrazilianState state,
-    BigDecimal inmetroConsumption,
     BigDecimal kmPerYear,
     BigDecimal pricePerLiter
 ) {

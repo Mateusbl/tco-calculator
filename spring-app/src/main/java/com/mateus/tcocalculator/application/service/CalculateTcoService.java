@@ -9,6 +9,7 @@ import com.mateus.tcocalculator.domain.FuelCostCalculator;
 import com.mateus.tcocalculator.domain.TcoResult;
 import com.mateus.tcocalculator.domain.Vehicle;
 import com.mateus.tcocalculator.domain.port.in.CalculateTcoUseCase;
+import com.mateus.tcocalculator.domain.port.out.FuelConsumptionPort;
 import com.mateus.tcocalculator.domain.port.out.IpvaRatePort;
 import com.mateus.tcocalculator.domain.port.out.LicensingFeePort;
 import com.mateus.tcocalculator.domain.port.out.VehiclePricePort;
@@ -19,19 +20,22 @@ public class CalculateTcoService implements CalculateTcoUseCase {
     private final VehiclePricePort vehiclePricePort;
     private final IpvaRatePort ipvaRatePort;
     private final LicensingFeePort licensingFeePort;
+    private final FuelConsumptionPort fuelConsumptionPort;
 
     public CalculateTcoService(
         FuelCostCalculator fuelCostCalculator,
         DepreciationCalculator depreciationCalculator,
         VehiclePricePort vehiclePricePort,
         IpvaRatePort ipvaRatePort,
-        LicensingFeePort licensingFeePort
+        LicensingFeePort licensingFeePort,
+        FuelConsumptionPort fuelConsumptionPort
     ){
         this.fuelCostCalculator = fuelCostCalculator;
         this.depreciationCalculator = depreciationCalculator;
         this.vehiclePricePort = vehiclePricePort;
         this.ipvaRatePort = ipvaRatePort;
         this.licensingFeePort = licensingFeePort;
+        this.fuelConsumptionPort = fuelConsumptionPort;
     }
 
     @Override
@@ -47,7 +51,8 @@ for (int i = 0; i < priceHistory.size(); i++) {
 }
 
 BigDecimal projectedDepreciation = depreciationCalculator.calculate(months, priceHistory, priceHistory.size());
-BigDecimal annualFuelCost = fuelCostCalculator.calculate(kmPerYear, vehicle.inmetroConsumption(), pricePerLiter);
+BigDecimal consumption = fuelConsumptionPort.findConsumption(vehicle.make(), vehicle.model());
+BigDecimal annualFuelCost = fuelCostCalculator.calculate(kmPerYear, consumption, pricePerLiter);
 BigDecimal vehicleValue = priceHistory.get(0);
 BigDecimal ipvaRate = ipvaRatePort.findRate(vehicle, vehicle.state());
 BigDecimal ipvaCost = vehicleValue.multiply(ipvaRate);BigDecimal licensingCost = licensingFeePort.findFee(vehicle.state());
