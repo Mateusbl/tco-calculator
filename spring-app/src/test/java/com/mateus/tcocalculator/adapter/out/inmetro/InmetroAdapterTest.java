@@ -62,4 +62,17 @@ void shouldFindConsumptionForRealVehicle() throws IOException{
     assertThat(result).isEqualByComparingTo(BigDecimal.valueOf(12.0));
 }
 
+
+@Test
+@DisplayName("find latest pdf test")
+void shouldFindLatestPdfUrl() throws IOException {
+    RestClient restClient = RestClient.create();
+    InmetroAdapter adapter = new InmetroAdapter(restClient);
+
+    String url = adapter.findLatestPdfUrl();
+
+    assertThat(url).contains("@@download/file");
+    assertThat(url).contains(".pdf");
+}
+
 }

@@ -3,8 +3,13 @@ package com.mateus.tcocalculator.adapter.out.inmetro;
 import java.io.IOException;
 import java.math.BigDecimal;
 
+
+
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.web.client.RestClient;
 
 public class InmetroAdapter {
@@ -42,6 +47,13 @@ public class InmetroAdapter {
             }
         }
     throw new IllegalArgumentException("Veiculo nao encontrado: "+make+""+model);
-    } 
+    }
+
+    private static final String LISTING_PAGE_URL = "https://www.gov.br/inmetro/pt-br/assuntos/regulamentacao/avaliacao-da-conformidade/programa-brasileiro-de-etiquetagem/tabelas-de-eficiencia-energetica/veiculos-automotivos-pbe-veicular";
+    public String findLatestPdfUrl() throws IOException{
+        Document doc = Jsoup.connect(LISTING_PAGE_URL).get();
+        Element link = doc.select("a[href*=@@download/file]").first();
+        return link.absUrl("href");
+    }
 
 }
