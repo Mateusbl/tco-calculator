@@ -34,6 +34,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 implementation("org.springframework.boot:spring-boot-starter-flyway")
 implementation("org.flywaydb:flyway-database-postgresql")
+implementation("org.apache.pdfbox:pdfbox:3.0.3")
 }
 
 tasks.withType<Test> {
