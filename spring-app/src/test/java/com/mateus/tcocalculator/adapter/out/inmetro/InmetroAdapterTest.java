@@ -12,7 +12,7 @@ public class InmetroAdapterTest {
 
     @Test
     @DisplayName("inmetro pdf download test")
-    void shouldDownloadPdfSuccessfully(){
+    void shouldDownloadPdfSuccessfully() throws IOException{
         RestClient restClient = RestClient.create();
         InmetroAdapter adapter = new InmetroAdapter(restClient);
 

@@ -13,15 +13,15 @@ import org.jsoup.nodes.Element;
 import org.springframework.web.client.RestClient;
 
 public class InmetroAdapter {
-    private static final String PDF_URL = "https://www.gov.br/inmetro/pt-br/assuntos/regulamentacao/avaliacao-da-conformidade/programa-brasileiro-de-etiquetagem/tabelas-de-eficiencia-energetica/veiculos-automotivos-pbe-veicular/pbe-veicular-2024-1.pdf/@@download/file";
     private final RestClient restClient;
     
     public InmetroAdapter(RestClient restClient){
         this.restClient = restClient;
     }
 
-    public byte [] downloadPDF(){
-        return restClient.get().uri(PDF_URL).retrieve().body(byte[].class);
+    public byte [] downloadPDF() throws IOException{
+        String url = findLatestPdfUrl();
+        return restClient.get().uri(url).retrieve().body(byte[].class);
     }
 
     public String extractText(byte[] pdfBytes) throws IOException{
