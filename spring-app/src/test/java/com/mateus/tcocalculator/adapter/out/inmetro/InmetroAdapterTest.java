@@ -57,7 +57,7 @@ void shouldFindConsumptionForRealVehicle() throws IOException{
     byte[] pdfBytes = adapter.downloadPDF();
     String text = adapter.extractText(pdfBytes);
 
-    BigDecimal result = adapter.findconsumption(text, "Mercedes-Benz", "CLA200");
+    BigDecimal result = adapter.findConsumption(text, "Mercedes-Benz", "CLA200");
 
     assertThat(result).isEqualByComparingTo(BigDecimal.valueOf(12.0));
 }

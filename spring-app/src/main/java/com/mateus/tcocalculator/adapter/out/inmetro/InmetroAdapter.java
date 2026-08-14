@@ -39,7 +39,7 @@ public class InmetroAdapter {
         return new BigDecimal(cidade.replace(",", "."));
     }
 
-    public BigDecimal findconsumption(String text, String make, String model){
+    public BigDecimal findConsumption(String text, String make, String model){
         String[] lines = text.split("\n");
         for (String line : lines ){
             if (line.contains(make) && line.contains(model)){
