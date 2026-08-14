@@ -1,6 +1,7 @@
 package com.mateus.tcocalculator.adapter.out.inmetro;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -25,5 +26,11 @@ public class InmetroAdapter {
         document.close();
         return text;
 
+    }
+
+    public BigDecimal parseConsumptionFromLine(String line){
+        String[] tokens = line.trim().split("\\s+");
+        String cidade = tokens[tokens.length - 9];
+        return new BigDecimal(cidade.replace(",", "."));
     }
 }
