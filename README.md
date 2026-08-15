@@ -1,13 +1,16 @@
-
 # TCO Calculator
  
 A Total Cost of Ownership calculator for vehicles, built as a Spring Boot learning project using Test-Driven Development and hexagonal architecture.
  
 ## Status
  
-Core domain and application logic complete. Given a vehicle, the system fetches real FIPE pricing data, projects depreciation via linear regression, and calculates fuel cost, IPVA (vehicle tax), and licensing fees to produce a full TCO estimate. Test coverage sits at 97% (JaCoCo).
- 
-Not yet built: REST controller (`adapter/in/web`) to expose this as an HTTP API, and a frontend.
+Core domain and application logic complete, and exposed over HTTP. Given a vehicle (brand/model/year codes + state), the system fetches real FIPE pricing data, looks up fuel consumption by scraping the latest Inmetro efficiency PDF, projects depreciation via linear regression, and calculates fuel cost, IPVA (vehicle tax), and licensing fees to produce a full TCO estimate.
+
+`POST /tco/calcular` — single endpoint, takes `brandCode`, `modelCode`, `yearCode`, `state`, `kmPerYear`, `pricePerLiter`, returns the full cost breakdown plus total.
+
+Domain, calculators, and the FIPE/IPVA/licensing/persistence adapters are unit-tested. The web controller, `BuildVehicleService`, and `FuelConsumptionService` (the Inmetro-backed fuel consumption port) don't have tests yet.
+
+Not yet built: frontend.
  
 ## Stack
  
@@ -24,19 +27,25 @@ Hexagonal (ports and adapters):
  
 ```
 domain/
-├── model (Vehicle, FuelType, BrazilianState)
-├── FuelCostCalculator, DepreciationCalculator, TcoResult
+├── model (Vehicle, VehicleDetails, FuelType, BrazilianState)
+├── VehicleFactory, FuelCostCalculator, DepreciationCalculator, TcoResult
 └── port
-    ├── in  (CalculateTcoUseCase)
-    └── out (VehiclePricePort, IpvaRatePort, LicensingFeePort)
+    ├── in  (BuildVehicleUseCase, CalculateTcoUseCase)
+    └── out (VehiclePricePort, FuelConsumptionPort, IpvaRatePort, LicensingFeePort)
  
 application/
-└── service (CalculateTcoService — orchestrates the use case)
+└── service
+    ├── BuildVehicleService     (assembles a Vehicle from FIPE details + fuel consumption)
+    ├── CalculateTcoService     (orchestrates the TCO calculation)
+    └── FuelConsumptionService  (FuelConsumptionPort impl, backed by InmetroAdapter)
  
 adapter/
-├── in/web        (not yet implemented)
+├── in/web         (TcoController — exposes POST /tco/calcular)
 └── out
     ├── fipe        (FipeAdapter — real HTTP client for the Parallelum FIPE API)
+    ├── inmetro     (InmetroAdapter — downloads the latest Inmetro fuel-efficiency
+                      PDF from gov.br, extracts text with PDFBox, and parses
+                      consumption by make/model)
     ├── ipva        (StaticIpvaAdapter — rate table by state + fuel type)
     ├── licensing   (StaticLicensingAdapter — fee table by state)
     └── persistence (CachedVehiclePriceAdapter — Postgres-backed cache
@@ -67,8 +76,22 @@ Spring Boot's Docker Compose Support will automatically start the Postgres conta
 ```
  
 Generates a JaCoCo coverage report at `build/reports/jacoco/test/html/index.html`.
+
+### Example request
+
+```bash
+curl -X POST http://localhost:8080/tco/calcular \
+  -H "Content-Type: application/json" \
+  -d '{
+    "brandCode": 22,
+    "modelCode": 5940,
+    "yearCode": "2021-1",
+    "state": "RJ",
+    "kmPerYear": 15000,
+    "pricePerLiter": 6.10
+  }'
+```
  
 ## License
  
 MIT — see [LICENSE](LICENSE).
- 
