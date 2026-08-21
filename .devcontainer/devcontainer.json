@@ -1,0 +1,36 @@
+{
+    "name": "Java 25 & Spring Boot (TCO Calculator)",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    
+    "mounts": [
+        "source=${localEnv:XDG_RUNTIME_DIR}/podman/podman.sock,target=/var/run/docker.sock,type=bind"
+    ],
+    "containerEnv": {
+        "DOCKER_HOST": "unix:///var/run/docker.sock",
+        "SPRING_PROFILES_ACTIVE": "dev"
+    },
+
+    "forwardPorts": [8080],
+    "postCreateCommand": "cd spring-app && chmod +x gradlew",
+    
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "vscjava.vscode-java-pack",
+                "vmware.vscode-spring-boot",
+                "vscjava.vscode-spring-boot-dashboard",
+                "vscjava.vscode-gradle"
+                
+            ],
+            "settings": {
+                "java.import.gradle.java.home": "/opt/java/openjdk",
+                "dev.containers.dockerPath": "podman",
+                "spring-boot.ls.java.home": "/opt/java/openjdk"
+            }
+        }
+    },
+    
+    "remoteUser": "vscode"
+}   

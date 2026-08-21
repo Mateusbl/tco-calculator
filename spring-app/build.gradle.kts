@@ -36,6 +36,7 @@ implementation("org.springframework.boot:spring-boot-starter-flyway")
 implementation("org.flywaydb:flyway-database-postgresql")
 implementation("org.apache.pdfbox:pdfbox:3.0.3")
 implementation("org.jsoup:jsoup:1.18.1")
+implementation ("org.springframework.boot:spring-boot-starter-actuator")
 }
 
 tasks.withType<Test> {
