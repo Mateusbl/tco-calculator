@@ -25,7 +25,11 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && apt-get update \
     && apt-get install -y sudo \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-    && chmod 0440 /etc/sudoers.d/$USERNAME
+    && chmod 0440 /etc/sudoers.d/$USERNAME\
+    && git config --global user.email "mateusbarbosa999@gmail.com"\
+    && git config --global user.name "Mateus Barbosa" 
+
+
 
 USER $USERNAME
 WORKDIR /workspace
